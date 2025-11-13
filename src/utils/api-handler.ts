@@ -1,8 +1,7 @@
-// import { BadRequestError, InternalError, NotFoundError } from 'types/errors';
-
-import { NotFoundError } from '../types/errors.ts';
+import { InternalError, NotFoundError } from '../types/errors.ts';
 import { UserStorage } from '../data/dataStorage';
 import type { CustomRequest } from '../types/requests';
+import { isKnownError } from './typeguards.ts';
 
 const processMap: Map<string, Map<string, string>> = new Map([
   [
@@ -32,25 +31,29 @@ export const apiHandler = (request: CustomRequest, storage: UserStorage) => {
   const { command, arg } = routeHandler(request.url, request.method);
 
   let result = { body: '', code: 200 };
-
-  switch (command) {
-    case 'get users':
-      result.body = JSON.stringify(storage.getUsers(arg ?? null));
-      break;
-    case 'create user':
-      result.body = JSON.stringify(storage.createUser(request.body));
-      result.code = 201;
-      break;
-    case 'update user':
-      result.body = JSON.stringify(storage.updateUser(arg, request.body));
-      break;
-    case 'delete user':
-      storage.deleteUser(arg);
-      result.body = 'The user have been deleted';
-      result.code = 204;
-      break;
-    default:
-      throw new NotFoundError();
+  try {
+    switch (command) {
+      case 'get users':
+        result.body = JSON.stringify(storage.getUsers(arg ?? null));
+        break;
+      case 'create user':
+        result.body = JSON.stringify(storage.createUser(request.body));
+        result.code = 201;
+        break;
+      case 'update user':
+        result.body = JSON.stringify(storage.updateUser(arg, request.body));
+        break;
+      case 'delete user':
+        storage.deleteUser(arg);
+        result.body = 'The user have been deleted';
+        result.code = 204;
+        break;
+      default:
+        throw new NotFoundError();
+    }
+  } catch (error) {
+    if (isKnownError(error)) throw error;
+    throw new InternalError();
   }
   return result;
 };

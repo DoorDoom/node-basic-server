@@ -1,6 +1,7 @@
 import { randomUUID } from 'crypto';
-import type { User } from '../types/user.ts';
+import { User } from '../types/user.ts';
 import { BadRequestError, NotFoundError } from '../types/errors.ts';
+import { isUser } from '../utils/typeguards.ts';
 
 class UserStorage {
   users: User[] = [];
@@ -32,6 +33,8 @@ class UserStorage {
       ...obj,
       id: randomUUID(),
     };
+
+    if (!isUser(result)) throw new BadRequestError();
     this.users.push(result);
     return obj;
   }
