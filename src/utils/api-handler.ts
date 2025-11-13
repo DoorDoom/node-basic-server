@@ -1,36 +1,56 @@
 // import { BadRequestError, InternalError, NotFoundError } from 'types/errors';
 
-import { BadRequestError } from '../types/errors.ts';
+import { NotFoundError } from '../types/errors.ts';
 import { UserStorage } from '../data/dataStorage';
 import type { CustomRequest } from '../types/requests';
 
+const processMap: Map<string, Map<string, string>> = new Map([
+  [
+    '/api/users',
+    new Map([
+      ['GET', 'get users'],
+      ['POST', 'create user'],
+      ['PUT', 'update user'],
+      ['DELETE', 'delete user'],
+    ]),
+  ],
+]);
+
 const pathExtraction = (path: string) => {
-  if (!path.match(/^api\/users/)) throw new BadRequestError();
+  const match = path.match(/^\/api\/users/);
+  if (!match) throw new NotFoundError();
+  return { url: match[0], userId: path.slice(match[0].length + 1) };
 };
-const routeHandler = (path: string) => {
-  pathExtraction(path);
+
+const routeHandler = (path: string, method: string) => {
+  const { url, userId } = pathExtraction(path);
+
+  return { command: processMap.get(url)?.get(method), arg: userId };
 };
 
 export const apiHandler = (request: CustomRequest, storage: UserStorage) => {
-  routeHandler(request.url);
-  return { id: '123', request, storage };
-  //   try {
-  //     switch (error) {
-  //       case 'not found':
-  //         throw new NotFoundError();
-  //       case 'bad request':
-  //         throw new BadRequestError();
-  //       default:
-  //         throw new InternalError();
-  //     }
-  //   } catch (error) {
-  //     switch (error) {
-  //       case 'not found':
-  //         throw new NotFoundError();
-  //       case 'bad request':
-  //         throw new BadRequestError();
-  //       default:
-  //         throw new InternalError();
-  //     }
-  //   }
+  const { command, arg } = routeHandler(request.url, request.method);
+
+  let result = { body: '', code: 200 };
+
+  switch (command) {
+    case 'get users':
+      result.body = JSON.stringify(storage.getUsers(arg ?? null));
+      break;
+    case 'create user':
+      result.body = JSON.stringify(storage.createUser(request.body));
+      result.code = 201;
+      break;
+    case 'update user':
+      result.body = JSON.stringify(storage.updateUser(arg, request.body));
+      break;
+    case 'delete user':
+      storage.deleteUser(arg);
+      result.body = 'The user have been deleted';
+      result.code = 204;
+      break;
+    default:
+      throw new NotFoundError();
+  }
+  return result;
 };

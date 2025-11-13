@@ -7,14 +7,15 @@ import { apiHandler } from './utils/api-handler.ts';
 import type { CustomRequest } from './types/requests.ts';
 import { isKnownError } from './utils/typeguards.ts';
 
+const userStorage = new UserStorage();
+
 const server = http.createServer(async (request, response) => {
-  const userStorage = new UserStorage();
   const processedRequest: CustomRequest = await processRequest(request);
 
   try {
-    const { id } = apiHandler(processedRequest, userStorage);
-    response.writeHead(200, { 'Content-Type': 'application/json' });
-    response.end(id);
+    const { body, code } = apiHandler(processedRequest, userStorage);
+    response.writeHead(code, { 'Content-Type': 'application/json' });
+    response.end(body);
   } catch (error) {
     if (isKnownError(error))
       response.writeHead(error.statusCode, {

@@ -7,6 +7,8 @@ const processRequest = (req: IncomingMessage): Promise<CustomRequest> =>
 
     req.on('data', (chunk) => (body += chunk.toString()));
 
-    resolve({ body, method: req.method ?? '', url: req.url ?? '' });
+    req.on('end', () => {
+      resolve({ body, method: req.method ?? '', url: req.url ?? '' });
+    });
   });
 export { processRequest };
