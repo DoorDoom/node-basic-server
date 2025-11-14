@@ -12,6 +12,10 @@ class UserStorage {
     );
   };
 
+  updateUsers = (value: User[]) => {
+    this.users = value;
+  };
+
   findUser(userId: string) {
     if (!this.isUUID(userId)) throw new BadRequestError();
     const index = this.users.findIndex((value) => value.id == userId);

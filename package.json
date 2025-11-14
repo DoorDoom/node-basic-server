@@ -25,6 +25,7 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint \"src/**/*.ts\" --fix",
     "start:dev": "cross-env NODE_ENV=dev ts-node-dev \"src/index.ts\"",
+    "start:multi": "cross-env NODE_ENV=dev ts-node-dev \"src/multi-index.ts\"",
     "start:prod": "tsc && cross-env NODE_ENV=prod node dist/index.js",
     "test": "jest --silent",
     "build": "tsc"
