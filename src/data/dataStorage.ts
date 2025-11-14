@@ -36,7 +36,7 @@ class UserStorage {
 
     if (!isUser(result)) throw new BadRequestError();
     this.users.push(result);
-    return obj;
+    return result;
   }
 
   deleteUser(userId: string) {

@@ -9,7 +9,7 @@ import { isKnownError } from './utils/typeguards';
 
 const userStorage = new UserStorage();
 
-const server = http.createServer(async (request, response) => {
+export const server = http.createServer(async (request, response) => {
   const processedRequest: CustomRequest = await processRequest(request);
 
   try {
@@ -19,7 +19,7 @@ const server = http.createServer(async (request, response) => {
   } catch (error) {
     if (isKnownError(error))
       response.writeHead(error.statusCode, {
-        'Content-Type': 'application/json',
+        'Content-Type': 'text/plain',
       });
 
     response.end((error as Error).message);
