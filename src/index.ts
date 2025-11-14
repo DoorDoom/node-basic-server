@@ -1,11 +1,11 @@
 // import { PORT } from './environment/env';
-import { UserStorage } from './data/dataStorage.ts';
-import { PORT } from './environment/env.ts';
+import { UserStorage } from './data/dataStorage';
+import { PORT } from './environment/env';
 import http from 'http';
-import { processRequest } from './utils/request-utils.ts';
-import { apiHandler } from './utils/api-handler.ts';
-import type { CustomRequest } from './types/requests.ts';
-import { isKnownError } from './utils/typeguards.ts';
+import { processRequest } from './utils/request-utils';
+import { apiHandler } from './utils/api-handler';
+import type { CustomRequest } from './types/requests';
+import { isKnownError } from './utils/typeguards';
 
 const userStorage = new UserStorage();
 

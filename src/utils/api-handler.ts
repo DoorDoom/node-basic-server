@@ -1,7 +1,7 @@
-import { InternalError, NotFoundError } from '../types/errors.ts';
+import { InternalError, NotFoundError } from '../types/errors';
 import { UserStorage } from '../data/dataStorage';
 import type { CustomRequest } from '../types/requests';
-import { isKnownError } from './typeguards.ts';
+import { isKnownError } from './typeguards';
 
 const processMap: Map<string, Map<string, string>> = new Map([
   [
@@ -18,7 +18,9 @@ const processMap: Map<string, Map<string, string>> = new Map([
 const pathExtraction = (path: string) => {
   const match = path.match(/^\/api\/users/);
   if (!match) throw new NotFoundError();
-  return { url: match[0], userId: path.slice(match[0].length + 1) };
+  const arg = path.slice(match[0].length + 1);
+  if (arg.includes('/')) throw new NotFoundError();
+  return { url: match[0], userId: arg };
 };
 
 const routeHandler = (path: string, method: string) => {

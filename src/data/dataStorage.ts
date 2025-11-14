@@ -1,7 +1,7 @@
 import { randomUUID } from 'crypto';
-import { User } from '../types/user.ts';
-import { BadRequestError, NotFoundError } from '../types/errors.ts';
-import { isUser } from '../utils/typeguards.ts';
+import { User } from '../types/user';
+import { BadRequestError, NotFoundError } from '../types/errors';
+import { isUser } from '../utils/typeguards';
 
 class UserStorage {
   users: User[] = [];

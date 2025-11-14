@@ -1,9 +1,5 @@
-import { User } from '../types/user.ts';
-import {
-  BadRequestError,
-  InternalError,
-  NotFoundError,
-} from '../types/errors.ts';
+import { User } from '../types/user';
+import { BadRequestError, InternalError, NotFoundError } from '../types/errors';
 
 export function isKnownError(
   error: unknown,
