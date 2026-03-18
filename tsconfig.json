@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
     "baseUrl": "src",
+    "noEmit": true,
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
+    "allowImportingTsExtensions": true,
     "esModuleInterop": true,
     "lib": ["ESNext"],
     "module": "CommonJS",
@@ -19,5 +21,5 @@
     "strict": true,
     "strictPropertyInitialization": false,
     "target": "ES2020"
-  },
+  }
 }
