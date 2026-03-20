@@ -6,4 +6,6 @@ dotenv.config({
 });
 const port = process.env.PORT ? Number(process.env.PORT) : 8080;
 
-createServer(port);
+(async () => {
+  await createServer(port);
+})();

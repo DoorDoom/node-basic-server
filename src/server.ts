@@ -1,12 +1,6 @@
 import fastify from 'fastify';
 import { ProductService } from './services/productService';
 import { createProductSchema } from './schemas/product';
-// import dotenv from 'dotenv';
-
-// dotenv.config({
-//   path: './environments/.env',
-// });
-// const port = process.env.PORT ? Number(process.env.PORT) : 8080;
 
 export async function createServer(port: number, multiplex = false) {
   const uuidRegex =
@@ -75,11 +69,16 @@ export async function createServer(port: number, multiplex = false) {
     return reply.code(204).send();
   });
 
-  server.listen({ port }, (err, address) => {
-    if (err) {
-      console.error(err);
+  const start = async () => {
+    try {
+      await server.listen({ port: 3000 });
+    } catch (err) {
+      server.log.error(err);
       process.exit(1);
     }
-    console.log(`Server listening at ${address}`);
-  });
+  };
+
+  await start();
+
+  return server;
 }

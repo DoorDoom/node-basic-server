@@ -27,6 +27,7 @@
     "start:dev": "nodemon \"src/index.ts\"",
     "start:multi": "ts-node \"src/multi-index.ts\"",
     "start:prod": "tsc && node \"dist/index.js\"",
+    "test": "node --test --watch --require ts-node/register \"src/index.test.ts\"",
     "build": "tsc"
   },
   "devDependencies": {
