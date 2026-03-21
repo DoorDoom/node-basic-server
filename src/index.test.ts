@@ -1,9 +1,18 @@
-import { describe, it, test } from 'node:test';
+import { describe, it, before, after } from 'node:test';
 import assert from 'node:assert';
 import { createServer } from './server';
+import { FastifyInstance } from 'fastify';
 
 describe('tests', async (t) => {
-  const app = await createServer(3000);
+  let app: FastifyInstance;
+
+  before(async () => {
+    app = await createServer(3000);
+  });
+
+  after(async () => {
+    app.close();
+  });
 
   it('GET `/products` empty route', async () => {
     const response = await app.inject({
