@@ -11,10 +11,10 @@ describe('tests', async (t) => {
   });
 
   after(async () => {
-    app.close();
+    await app.close();
   });
 
-  it('GET `/products` empty route', async () => {
+  await it('GET `/products` empty route', async () => {
     const response = await app.inject({
       method: 'GET',
       url: '/products',
@@ -28,7 +28,7 @@ describe('tests', async (t) => {
     assert.deepStrictEqual(response.json(), []);
   });
 
-  it('POST `/products` empty route', async () => {
+  await it('POST `/products` empty route', async () => {
     const response = await app.inject({
       method: 'POST',
       url: '/products',
@@ -60,7 +60,7 @@ describe('tests', async (t) => {
     );
   });
 
-  it('GET `/products` created product', async () => {
+  await it('GET `/products` created product', async () => {
     const response = await app.inject({
       method: 'POST',
       url: '/products',
@@ -75,7 +75,7 @@ describe('tests', async (t) => {
 
     assert.strictEqual(response.statusCode, 201);
 
-    const { id } = response.json();
+    const { id } = await response.json();
 
     const productResponse = await app.inject({
       method: 'GET',
@@ -83,7 +83,7 @@ describe('tests', async (t) => {
     });
 
     const { name, description, category, price, inStock } =
-      productResponse.json();
+      await productResponse.json();
 
     assert.strictEqual(productResponse.statusCode, 200);
     assert.deepStrictEqual(
