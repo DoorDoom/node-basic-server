@@ -27,49 +27,49 @@ if (cluster.isPrimary) {
   });
 
   // Add a load balancer
-  let current = 0;
+  // let current = 0;
 
-  const server = fastify({
-    logger: true,
-  });
+  // const server = fastify({
+  //   logger: true,
+  // });
 
-  server.all('*', (request, reply) => {
-    const targetPort = port + (current % numCPUs) + 1;
-    current = (current + 1) % numCPUs;
-    const { method, url, headers } = request;
+  // server.all('*', (request, reply) => {
+  //   const targetPort = port + (current % numCPUs) + 1;
+  //   current = (current + 1) % numCPUs;
+  //   const { method, url, headers } = request;
 
-    const options = {
-      hostname: 'localhost',
-      port: targetPort,
-      path: request.url,
-      method: request.method,
-      headers: request.headers,
-    };
+  //   const options = {
+  //     hostname: 'localhost',
+  //     port: targetPort,
+  //     path: request.url,
+  //     method: request.method,
+  //     headers: request.headers,
+  //   };
 
-    const proxyReq = http.request(options, (proxyRes) => {
-      console.log(`Proxying request to worker on port ${targetPort}`);
-      reply.code(proxyRes.statusCode || 500);
+  //   const proxyReq = http.request(options, (proxyRes) => {
+  //     console.log(`Proxying request to worker on port ${targetPort}`);
+  //     reply.code(proxyRes.statusCode || 500);
 
-      for (const [key, value] of Object.entries(proxyRes.headers)) {
-        reply.header(key, value);
-      }
+  //     for (const [key, value] of Object.entries(proxyRes.headers)) {
+  //       reply.header(key, value);
+  //     }
 
-      proxyRes.pipe(reply.raw);
-    });
+  //     proxyRes.pipe(reply.raw);
+  //   });
 
-    proxyReq.on('error', (err) => {
-      console.error(err);
-      reply.code(500).send({ error: 'Multi server error' });
-    });
-  });
+  //   proxyReq.on('error', (err) => {
+  //     console.error(err);
+  //     reply.code(500).send({ error: 'Multi server error' });
+  //   });
+  // });
 
-  server.listen({ port }, (err, address) => {
-    if (err) {
-      console.error(err);
-      process.exit(1);
-    }
-    console.log(`Load balancer listening at ${address}`);
-  });
+  // server.listen({ port }, (err, address) => {
+  //   if (err) {
+  //     console.error(err);
+  //     process.exit(1);
+  //   }
+  //   console.log(`Load balancer listening at ${address}`);
+  // });
 } else {
   const appPort = process.env.PORT;
   createServer(Number(appPort) || 3000, true);

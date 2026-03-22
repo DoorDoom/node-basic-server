@@ -2,7 +2,7 @@ import fastify from 'fastify';
 import { ProductService } from './services/productService';
 import { createProductSchema } from './schemas/product';
 
-export async function createServer(port: number, multiplex = false) {
+export async function createServer(port: number = 3000, multiplex = false) {
   const uuidRegex =
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -71,7 +71,7 @@ export async function createServer(port: number, multiplex = false) {
 
   const start = async () => {
     try {
-      await server.listen({ port: 3000 });
+      await server.listen({ port });
     } catch (err) {
       server.log.error(err);
       process.exit(1);
