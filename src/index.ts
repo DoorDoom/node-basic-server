@@ -1,11 +1,11 @@
-import http from 'http';
+import dotenv from 'dotenv';
+import { createServer } from './server';
 
-const server = http.createServer((request, response) => {
-  response.writeHead(200, { 'Content-Type': 'text/plain' });
-  response.end('Hello, World!\n');
+dotenv.config({
+  path: './environments/.env',
 });
+const port = process.env.PORT ? Number(process.env.PORT) : 8080;
 
-const PORT = 3000;
-server.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}/`);
-});
+(async () => {
+  await createServer(port);
+})();
